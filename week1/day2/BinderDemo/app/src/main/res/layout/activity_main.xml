@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- 标题 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔗 Binder IPC 演示"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1a1a2e"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Activity(Client) ↔ Binder ↔ Service(Server)"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
+
+        <!-- 客户端进程信息 -->
+        <TextView
+            android:id="@+id/tv_process_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Client 进程信息"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:background="#334155"
+            android:padding="12dp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 服务绑定控制 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btn_bind"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="绑定服务"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_unbind"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="解绑服务"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- 输入区域 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <EditText
+                android:id="@+id/et_num_a"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="数字 A"
+                android:inputType="numberSigned"
+                android:text="42"
+                android:textAlignment="center"
+                android:background="#FFFFFF"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  ⇄  "
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_num_b"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="数字 B"
+                android:inputType="numberSigned"
+                android:text="18"
+                android:textAlignment="center"
+                android:background="#FFFFFF"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- 操作按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="➕ 加法 (IPC)"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_subtract"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="➖ 减法 (IPC)"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_process_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔍 查看双端进程信息（验证跨进程）"
+            android:textSize="13sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 结果展示 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📋 运行结果"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1a1a2e"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="160dp"
+            android:text="点击「绑定服务」开始体验 Binder IPC"
+            android:textSize="14sp"
+            android:textColor="#1e293b"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:fontFamily="monospace"
+            android:lineSpacingMultiplier="1.4" />
+
+    </LinearLayout>
+</ScrollView>

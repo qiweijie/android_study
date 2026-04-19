@@ -1,0 +1,17 @@
+# Android/Gradle
+*.iml
+.gradle/
+build/
+local.properties
+.idea/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Qoder
+.qoder/

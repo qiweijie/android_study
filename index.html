@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android 系统开发 · 两周学习计划</title>
+    <meta name="description" content="面向 C++ 开发者的 Android 系统开发快速上手计划，聚焦平台稳定性建设">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2235;
+            --bg-card-hover: #1f2a40;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-pink: #ec4899;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --glow-blue: rgba(59, 130, 246, 0.15);
+            --glow-purple: rgba(139, 92, 246, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            position: relative;
+            padding: 80px 40px 60px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 50%, rgba(139,92,246,0.08) 0%, transparent 50%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+        @keyframes heroGlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-2%, 2%); }
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 20px;
+            background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+            font-size: 13px; color: var(--accent-blue); font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hero h1 {
+            font-size: 42px; font-weight: 800; letter-spacing: -1px;
+            background: linear-gradient(135deg, #f1f5f9, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        .hero p { font-size: 17px; color: var(--text-secondary); max-width: 650px; margin: 0 auto 32px; }
+        .hero-meta {
+            display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+        }
+        .hero-meta-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 14px; color: var(--text-muted);
+        }
+        .hero-meta-item span { color: var(--text-primary); font-weight: 600; }
+
+        /* ===== Overview Cards ===== */
+        .overview {
+            max-width: 1100px; margin: 0 auto 60px; padding: 0 24px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+        }
+        .ov-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 24px;
+            transition: all 0.3s;
+        }
+        .ov-card:hover { transform: translateY(-3px); border-color: rgba(59,130,246,0.3); }
+        .ov-icon { font-size: 28px; margin-bottom: 12px; }
+        .ov-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .ov-card p { font-size: 13px; color: var(--text-secondary); }
+
+        /* ===== Week Header ===== */
+        .week-header {
+            max-width: 1100px; margin: 40px auto 24px; padding: 0 24px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .week-tag {
+            padding: 6px 18px; border-radius: 8px; font-size: 14px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+        }
+        .week-1 .week-tag { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); }
+        .week-2 .week-tag { background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)); }
+        .week-header h2 { font-size: 24px; font-weight: 700; }
+        .week-header p { font-size: 14px; color: var(--text-secondary); margin-left: auto; }
+
+        /* ===== Day Cards ===== */
+        .days-grid {
+            max-width: 1100px; margin: 0 auto 48px; padding: 0 24px;
+            display: grid; grid-template-columns: 1fr; gap: 16px;
+        }
+        .day-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden;
+            transition: all 0.3s;
+        }
+        .day-card:hover { border-color: rgba(59,130,246,0.25); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .day-card.expanded .day-body { display: block; }
+        .day-head {
+            display: flex; align-items: center; padding: 20px 24px; cursor: pointer; gap: 16px;
+            user-select: none;
+        }
+        .day-num {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 700; flex-shrink: 0;
+        }
+        .w1 .day-num { background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.2)); color: var(--accent-cyan); }
+        .w2 .day-num { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2)); color: var(--accent-pink); }
+        .day-info { flex: 1; }
+        .day-title { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+        .day-sub { font-size: 13px; color: var(--text-muted); }
+        .day-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .day-tag {
+            padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 500;
+            background: rgba(59,130,246,0.1); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.15);
+        }
+        .day-tag.cpp { background: rgba(16,185,129,0.1); color: var(--accent-green); border-color: rgba(16,185,129,0.15); }
+        .day-tag.key { background: rgba(245,158,11,0.1); color: var(--accent-orange); border-color: rgba(245,158,11,0.15); }
+        .day-tag.practice { background: rgba(139,92,246,0.1); color: var(--accent-purple); border-color: rgba(139,92,246,0.15); }
+        .day-arrow {
+            font-size: 18px; color: var(--text-muted); transition: transform 0.3s; flex-shrink: 0;
+        }
+        .day-card.expanded .day-arrow { transform: rotate(180deg); }
+
+        .day-body {
+            display: none; padding: 0 24px 24px; border-top: 1px solid var(--border);
+        }
+        .day-section { margin-top: 20px; }
+        .day-section h4 {
+            font-size: 13px; font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+        }
+        .task-list { list-style: none; }
+        .task-list li {
+            position: relative; padding: 8px 0 8px 28px;
+            font-size: 14px; color: var(--text-secondary);
+            border-bottom: 1px solid rgba(30,41,59,0.5);
+        }
+        .task-list li:last-child { border-bottom: none; }
+        .task-list li::before {
+            content: ''; position: absolute; left: 0; top: 14px;
+            width: 14px; height: 14px; border-radius: 4px;
+            border: 2px solid var(--text-muted);
+        }
+        .task-list li strong { color: var(--text-primary); font-weight: 500; }
+
+        .code-hint {
+            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            border-radius: 10px; padding: 14px 18px; margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace; font-size: 13px;
+            color: var(--accent-cyan); line-height: 1.8;
+        }
+        .code-hint .comment { color: var(--text-muted); }
+        .code-hint .cmd { color: var(--accent-green); }
+
+        .output-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 6px; font-size: 11px;
+            background: rgba(16,185,129,0.1); color: var(--accent-green);
+            border: 1px solid rgba(16,185,129,0.15); margin: 4px 4px 0 0;
+        }
+
+        /* ===== Stability Roadmap ===== */
+        .roadmap {
+            max-width: 1100px; margin: 20px auto 60px; padding: 0 24px;
+        }
+        .roadmap h2 {
+            font-size: 24px; font-weight: 700; margin-bottom: 24px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .rm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+        .rm-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 24px; position: relative; overflow: hidden;
+        }
+        .rm-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        }
+        .rm-card.c1::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+        .rm-card.c2::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+        .rm-card.c3::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+        .rm-card.c4::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+        .rm-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        .rm-card ul { list-style: none; }
+        .rm-card li { padding: 4px 0; font-size: 13px; color: var(--text-secondary); }
+        .rm-card li::before { content: '→ '; color: var(--text-muted); }
+
+        /* ===== Resources ===== */
+        .resources {
+            max-width: 1100px; margin: 0 auto 80px; padding: 0 24px;
+        }
+        .resources h2 { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
+        .res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+        .res-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; font-size: 14px; color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .res-item:hover { border-color: rgba(59,130,246,0.3); }
+        .res-item .icon { font-size: 20px; }
+        .res-item strong { color: var(--text-primary); font-weight: 500; }
+
+        /* ===== Footer ===== */
+        footer {
+            text-align: center; padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px; color: var(--text-muted);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 28px; }
+            .hero { padding: 48px 20px 40px; }
+            .day-head { flex-wrap: wrap; }
+            .day-tags { margin-top: 8px; }
+            .hero-meta { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge"><div class="dot"></div>Learning Plan</div>
+        <h1>Android 系统开发<br>两周快速上手计划</h1>
+        <p>面向有 6 年 C++ 经验的开发者，从 Kernel 视角切入 Android 系统开发，<br>为平台稳定性建设工作打好坚实基础。</p>
+        <div class="hero-meta">
+            <div class="hero-meta-item">📅 <span>10 个工作日</span></div>
+            <div class="hero-meta-item">🎯 <span>稳定性建设</span></div>
+            <div class="hero-meta-item">🔧 <span>C++ 背景优势</span></div>
+            <div class="hero-meta-item">📱 <span>系统级开发</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- Overview -->
+<div class="overview">
+    <div class="ov-card">
+        <div class="ov-icon">🏗️</div>
+        <h3>第一周：架构认知</h3>
+        <p>AOSP 源码、启动流程、Framework 核心、Native 层，建立全局视角</p>
+    </div>
+    <div class="ov-card">
+        <div class="ov-icon">🔍</div>
+        <h3>第二周：稳定性实战</h3>
+        <p>Crash/ANR 分析、Watchdog、Tombstone、性能工具、稳定性治理实操</p>
+    </div>
+    <div class="ov-card">
+        <div class="ov-icon">💪</div>
+        <h3>C++ 优势发挥</h3>
+        <p>Native Crash 分析、JNI 桥接、系统守护进程开发是你的主场</p>
+    </div>
+    <div class="ov-card">
+        <div class="ov-icon">🎯</div>
+        <h3>目标输出</h3>
+        <p>能独立分析 Crash/ANR，制定稳定性指标体系，输出治理方案</p>
+    </div>
+</div>
+
+<!-- ==================== WEEK 1 ==================== -->
+<div class="week-header week-1">
+    <div class="week-tag">WEEK 1</div>
+    <h2>架构认知与基础建设</h2>
+    <p>Day 1 - Day 5</p>
+</div>
+
+<div class="days-grid">
+    <!-- Day 1 -->
+    <div class="day-card w1 expanded" id="day1">
+        <div class="day-head" onclick="toggleDay('day1')">
+            <div class="day-num">D1</div>
+            <div class="day-info">
+                <div class="day-title">环境搭建 & Android 架构全局观</div>
+                <div class="day-sub">建立 Android 系统的整体认知框架</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">核心基础</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 理论学习</h4>
+                <ul class="task-list">
+                    <li><strong>Android 系统分层架构</strong>：Linux Kernel → HAL → Native Libraries → ART → Framework → Apps，理解每层的职责边界</li>
+                    <li><strong>AOSP 源码结构</strong>：frameworks/base、system/core、bionic、art 等核心目录的作用</li>
+                    <li><strong>Android 系统启动流程</strong>：init → Zygote → SystemServer → Launcher 完整链路</li>
+                    <li><strong>关键进程概览</strong>：system_server、surfaceflinger、servicemanager、logd 的角色</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 动手实操</h4>
+                <ul class="task-list">
+                    <li><strong>搭建 AOSP 编译环境</strong>：repo sync、source build/envsetup.sh、lunch、make</li>
+                    <li><strong>熟悉关键调试命令</strong>：adb shell、logcat、dumpsys、ps、top</li>
+                    <li><strong>阅读 init.rc</strong>：理解 service 声明、class 分组、启动顺序</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># 必须掌握的命令</span><br>
+                    <span class="cmd">adb shell dumpsys activity</span> <span class="comment"># AMS 状态</span><br>
+                    <span class="cmd">adb shell ps -A | grep system_server</span><br>
+                    <span class="cmd">adb logcat -b all</span> <span class="comment"># 全量日志</span><br>
+                    <span class="cmd">adb shell cat /proc/[pid]/maps</span> <span class="comment"># 进程内存映射 (C++ 同学熟悉)</span>
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ AOSP 编译环境就绪</span>
+                <span class="output-tag">✓ 能画出 Android 分层架构图</span>
+                <span class="output-tag">✓ 能说清楚启动流程关键节点</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="day-card w1" id="day2">
+        <div class="day-head" onclick="toggleDay('day2')">
+            <div class="day-num">D2</div>
+            <div class="day-info">
+                <div class="day-title">Binder IPC 机制深入</div>
+                <div class="day-sub">Android 的「血管系统」—— 所有跨进程通信的基石</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">核心基础</span>
+                <span class="day-tag cpp">C++ 优势</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 理论学习</h4>
+                <ul class="task-list">
+                    <li><strong>Binder 架构</strong>：Client → Proxy → Binder Driver (内核) → Stub → Server 的完整调用链</li>
+                    <li><strong>ServiceManager</strong>：服务注册表，addService / getService 机制</li>
+                    <li><strong>AIDL 接口定义</strong>：.aidl 文件 → 自动生成 Proxy/Stub 代码的原理</li>
+                    <li><strong>Binder 线程池模型</strong>：默认 15 个 Binder 线程，线程耗尽 = ANR</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 动手实操</h4>
+                <ul class="task-list">
+                    <li><strong>阅读 servicemanager 源码</strong>（C++ 实现，frameworks/native/cmds/servicemanager）</li>
+                    <li><strong>用 adb shell service list</strong> 查看所有已注册的 Binder 服务</li>
+                    <li><strong>写一个简单的 AIDL 服务</strong>：在 system_server 中注册，用 App 调用</li>
+                    <li><strong>用 binder_sample 工具</strong>观察 Binder 事务和线程状态</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># Binder 状态调试</span><br>
+                    <span class="cmd">adb shell cat /sys/kernel/debug/binder/stats</span><br>
+                    <span class="cmd">adb shell cat /sys/kernel/debug/binder/transactions</span><br>
+                    <span class="cmd">adb shell dumpsys -l</span> <span class="comment"># 列出所有 dumpsys 服务</span>
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 能画出 Binder 通信流程图</span>
+                <span class="output-tag">✓ 理解 Binder 线程耗尽与 ANR 的关系</span>
+                <span class="output-tag">✓ 会用 AIDL 定义一个跨进程接口</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 3 -->
+    <div class="day-card w1" id="day3">
+        <div class="day-head" onclick="toggleDay('day3')">
+            <div class="day-num">D3</div>
+            <div class="day-info">
+                <div class="day-title">SystemServer & 核心系统服务</div>
+                <div class="day-sub">深入 Android 的「心脏」—— 稳定性问题的高发区</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">核心基础</span>
+                <span class="day-tag">稳定性相关</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 理论学习</h4>
+                <ul class="task-list">
+                    <li><strong>SystemServer 启动流程</strong>：三阶段启动（Bootstrap → Core → Other Services）</li>
+                    <li><strong>AMS (ActivityManagerService)</strong>：进程管理、四大组件生命周期、OOM Adj 机制</li>
+                    <li><strong>PMS (PackageManagerService)</strong>：APK 安装/扫描、权限管理</li>
+                    <li><strong>WMS (WindowManagerService)</strong>：窗口管理、焦点控制 —— ANR 判定的关键角色</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 动手实操</h4>
+                <ul class="task-list">
+                    <li><strong>阅读 SystemServer.java</strong>：定位 startBootstrapServices / startOtherServices</li>
+                    <li><strong>用 dumpsys 深入各服务</strong>：dumpsys activity、dumpsys window、dumpsys package</li>
+                    <li><strong>追踪 Watchdog 机制</strong>：阅读 Watchdog.java 源码，理解 system_server 自检原理</li>
+                    <li><strong>模拟 system_server 卡顿</strong>：注入延迟，观察 Watchdog 触发行为</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># 核心源码路径</span><br>
+                    frameworks/base/services/java/com/android/server/SystemServer.java<br>
+                    frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java<br>
+                    frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java<br>
+                    frameworks/base/services/core/java/com/android/server/Watchdog.java
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 能说清 AMS/WMS/PMS 的核心职责</span>
+                <span class="output-tag">✓ 理解 Watchdog 机制</span>
+                <span class="output-tag">✓ 能用 dumpsys 排查服务状态</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 4 -->
+    <div class="day-card w1" id="day4">
+        <div class="day-head" onclick="toggleDay('day4')">
+            <div class="day-num">D4</div>
+            <div class="day-info">
+                <div class="day-title">Native 层 & JNI 桥接</div>
+                <div class="day-sub">C++ 经验直接发挥的领域 —— Native Crash 分析的前提</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag cpp">C++ 主场</span>
+                <span class="day-tag">稳定性相关</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 理论学习</h4>
+                <ul class="task-list">
+                    <li><strong>Bionic libc</strong>：Android 的 C 库实现，与 glibc 的差异</li>
+                    <li><strong>JNI 机制</strong>：Java ↔ Native 桥接原理，JNIEnv、JavaVM、引用管理</li>
+                    <li><strong>Android Native 守护进程</strong>：surfaceflinger、mediaserver 等的架构</li>
+                    <li><strong>linker / 动态链接</strong>：Android 的 linker64 机制，.so 加载与符号解析</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 动手实操</h4>
+                <ul class="task-list">
+                    <li><strong>编写 JNI 模块</strong>：在 Framework 中添加一个 Native 方法，用 C++ 实现</li>
+                    <li><strong>Android.bp 构建系统</strong>：学习 Soong 构建系统（替代 Make），编写 cc_library</li>
+                    <li><strong>阅读 surfaceflinger 源码</strong>（C++ 实现，你会很有亲切感）</li>
+                    <li><strong>了解 hidl / stable-aidl</strong>：HAL 层接口定义</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment">// Android.bp 示例 (Soong 构建系统)</span><br>
+                    cc_library_shared {<br>
+                    &nbsp;&nbsp;name: "libmy_native",<br>
+                    &nbsp;&nbsp;srcs: ["my_native.cpp"],<br>
+                    &nbsp;&nbsp;shared_libs: ["liblog", "libutils", "libbinder"],<br>
+                    }
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 能编写 JNI 代码并编译</span>
+                <span class="output-tag">✓ 理解 Android.bp 构建系统</span>
+                <span class="output-tag">✓ 能阅读 Native 层系统服务代码</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 5 -->
+    <div class="day-card w1" id="day5">
+        <div class="day-head" onclick="toggleDay('day5')">
+            <div class="day-num">D5</div>
+            <div class="day-info">
+                <div class="day-title">日志系统 & 调试工具链</div>
+                <div class="day-sub">稳定性分析的基本功 —— 看懂日志、会用工具</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag practice">实操为主</span>
+                <span class="day-tag">稳定性相关</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 日志体系</h4>
+                <ul class="task-list">
+                    <li><strong>logd 守护进程</strong>：Android 日志系统架构（logd → liblog → logcat）</li>
+                    <li><strong>日志缓冲区</strong>：main / system / crash / kernel / events 五个 buffer 的用途</li>
+                    <li><strong>logcat 高级用法</strong>：按 tag/级别/PID 过滤，正则搜索，输出格式定制</li>
+                    <li><strong>kernel log</strong>：dmesg、/proc/kmsg 的使用场景</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 调试工具链</h4>
+                <ul class="task-list">
+                    <li><strong>systrace / Perfetto</strong>：系统级 trace 抓取与分析（卡顿定位利器）</li>
+                    <li><strong>dumpsys 全家桶</strong>：meminfo / cpuinfo / batterystats / procstats</li>
+                    <li><strong>bugreport</strong>：一键收集完整系统状态快照</li>
+                    <li><strong>addr2line / ndk-stack</strong>：Native 堆栈符号化（C++ 同学必备）</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># 稳定性分析常用命令</span><br>
+                    <span class="cmd">adb logcat -b crash</span> <span class="comment"># 查看 crash 日志</span><br>
+                    <span class="cmd">adb shell dumpsys meminfo [pid]</span> <span class="comment"># 内存详情</span><br>
+                    <span class="cmd">adb bugreport > bugreport.zip</span><br>
+                    <span class="cmd">python perfetto/trace_processor trace.perfetto-trace</span>
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出 · 第一周总结</h4>
+                <span class="output-tag">✓ 熟练使用 logcat / dumpsys / systrace</span>
+                <span class="output-tag">✓ 能分析 bugreport</span>
+                <span class="output-tag">✓ 编写第一周学习总结文档</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== WEEK 2 ==================== -->
+<div class="week-header week-2">
+    <div class="week-tag">WEEK 2</div>
+    <h2>稳定性专项深入</h2>
+    <p>Day 6 - Day 10</p>
+</div>
+
+<div class="days-grid">
+    <!-- Day 6 -->
+    <div class="day-card w2" id="day6">
+        <div class="day-head" onclick="toggleDay('day6')">
+            <div class="day-num">D6</div>
+            <div class="day-info">
+                <div class="day-title">Java Crash & ANR 分析</div>
+                <div class="day-sub">稳定性工作最高频的日常 —— 必须精通</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">稳定性核心</span>
+                <span class="day-tag practice">实操为主</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · Java Crash 机制</h4>
+                <ul class="task-list">
+                    <li><strong>异常传播链路</strong>：UncaughtExceptionHandler → AMS → dropbox → 日志</li>
+                    <li><strong>常见 Crash 类型</strong>：NPE / OOM / ClassNotFound / DeadObjectException</li>
+                    <li><strong>traces.txt 分析</strong>：线程状态、锁等待、死锁检测</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · ANR 深度分析</h4>
+                <ul class="task-list">
+                    <li><strong>ANR 触发机制</strong>：Input (5s) / BroadcastReceiver (10s) / Service (20s) / ContentProvider (10s)</li>
+                    <li><strong>ANR 日志分析</strong>：data/anr/traces.txt、Reason、CPU 使用率、iowait</li>
+                    <li><strong>Binder 调用链追踪</strong>：跨进程死锁、Binder 线程耗尽</li>
+                    <li><strong>实操</strong>：构造 ANR 场景 → 收集日志 → 定位根因 → 给出修复方案</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># ANR 分析关键信息</span><br>
+                    <span class="cmd">adb shell cat /data/anr/traces.txt</span><br>
+                    <span class="comment"># 看 main thread 状态：BLOCKED / WAITING / TIMED_WAITING</span><br>
+                    <span class="comment"># 看 CPU usage：如果 total CPU 很高 → 资源竞争</span><br>
+                    <span class="comment"># 看 iowait：如果很高 → IO 阻塞</span>
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 能独立分析 Java Crash 堆栈</span>
+                <span class="output-tag">✓ 能独立分析 ANR traces.txt</span>
+                <span class="output-tag">✓ 完成 3 个 ANR 案例分析</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 7 -->
+    <div class="day-card w2" id="day7">
+        <div class="day-head" onclick="toggleDay('day7')">
+            <div class="day-num">D7</div>
+            <div class="day-info">
+                <div class="day-title">Native Crash & Tombstone 分析</div>
+                <div class="day-sub">C++ 经验的最大发力点 —— 你比多数 Android 开发者更有优势</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">稳定性核心</span>
+                <span class="day-tag cpp">C++ 主场</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · Native Crash 机制</h4>
+                <ul class="task-list">
+                    <li><strong>信号机制</strong>：SIGSEGV / SIGABRT / SIGBUS / SIGFPE 的含义与触发条件</li>
+                    <li><strong>Tombstone 文件解析</strong>：信号信息、寄存器状态、调用栈、内存映射</li>
+                    <li><strong>debuggerd 守护进程</strong>：Native Crash 的收集与 Tombstone 生成流程</li>
+                    <li><strong>ASan / HWASan</strong>：地址消毒器在 Android 上的使用</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 实战分析</h4>
+                <ul class="task-list">
+                    <li><strong>addr2line / llvm-symbolizer</strong>：地址 → 源码行号还原</li>
+                    <li><strong>分析 3 个真实 tombstone</strong>：空指针、use-after-free、堆栈溢出</li>
+                    <li><strong>构造 Native Crash</strong>：故意写 Bug → 收集 Tombstone → 还原分析</li>
+                    <li><strong>coredump 分析</strong>（如已启用）：用 GDB 加载 coredump 进行离线分析</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># Tombstone 符号化</span><br>
+                    <span class="cmd">adb shell ls /data/tombstones/</span><br>
+                    <span class="cmd">arm-linux-androideabi-addr2line -e libxxx.so -f 0x12345</span><br>
+                    <span class="cmd">ndk-stack -sym ./symbols -dump tombstone_00</span>
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 能独立分析 Tombstone 文件</span>
+                <span class="output-tag">✓ 掌握 addr2line 符号化流程</span>
+                <span class="output-tag">✓ 完成 3 个 Native Crash 案例分析</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 8 -->
+    <div class="day-card w2" id="day8">
+        <div class="day-head" onclick="toggleDay('day8')">
+            <div class="day-num">D8</div>
+            <div class="day-info">
+                <div class="day-title">Watchdog & 系统级稳定性机制</div>
+                <div class="day-sub">system_server 挂了 = 全系统重启 —— 最严重的稳定性问题</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">稳定性核心</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 系统级稳定性机制</h4>
+                <ul class="task-list">
+                    <li><strong>Watchdog 机制</strong>：监控线程列表、检查周期 (30s/60s)、触发条件与响应</li>
+                    <li><strong>系统级 Crash 影响链</strong>：system_server 崩溃 → Zygote 重启 → 所有 App 重启</li>
+                    <li><strong>低内存管理</strong>：LMK / lmkd / OOM Adj 等级，进程优先级与回收策略</li>
+                    <li><strong>进程保活与回收</strong>：adj 分级、cached processes、empty processes</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 深入实操</h4>
+                <ul class="task-list">
+                    <li><strong>阅读 Watchdog.java 源码</strong>：HandlerChecker 列表、超时判定逻辑</li>
+                    <li><strong>分析 Watchdog 触发的日志</strong>：*** WATCHDOG KILLING SYSTEM PROCESS</li>
+                    <li><strong>lmkd 机制</strong>：/sys/module/lowmemorykiller/parameters/ 配置</li>
+                    <li><strong>DropBoxManagerService</strong>：系统异常事件持久化存储机制</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 理解 Watchdog 完整原理</span>
+                <span class="output-tag">✓ 能分析 system_server 重启原因</span>
+                <span class="output-tag">✓ 理解 OOM Adj 机制</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 9 -->
+    <div class="day-card w2" id="day9">
+        <div class="day-head" onclick="toggleDay('day9')">
+            <div class="day-num">D9</div>
+            <div class="day-info">
+                <div class="day-title">性能与内存稳定性</div>
+                <div class="day-sub">卡顿、内存泄漏、CPU 飙高 —— 慢性稳定性问题</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag practice">实操为主</span>
+                <span class="day-tag cpp">C++ 优势</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 性能分析</h4>
+                <ul class="task-list">
+                    <li><strong>Perfetto / systrace</strong>：抓取全系统 Trace，分析 UI 线程卡顿</li>
+                    <li><strong>CPU Profiling</strong>：simpleperf 使用，hot function 定位</li>
+                    <li><strong>内存分析</strong>：dumpsys meminfo、showmap、procrank</li>
+                    <li><strong>Native 内存泄漏</strong>：malloc_debug、libmemunreachable</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 稳定性监控体系</h4>
+                <ul class="task-list">
+                    <li><strong>设计稳定性量化指标</strong>：Crash 率、ANR 率、Watchdog 重启次数、千台天崩溃数</li>
+                    <li><strong>自动化监控方案</strong>：DropBox 事件监听 → 聚合 → 告警</li>
+                    <li><strong>日志采集体系设计</strong>：结合之前学习的 xlog / logd 知识</li>
+                    <li><strong>灰度/金丝雀发布</strong>：稳定性回归的验证策略</li>
+                </ul>
+                <div class="code-hint">
+                    <span class="comment"># 性能分析工具</span><br>
+                    <span class="cmd">adb shell simpleperf record -p [pid] -g --duration 10</span><br>
+                    <span class="cmd">adb shell simpleperf report</span><br>
+                    <span class="cmd">adb shell dumpsys meminfo --package com.xxx</span><br>
+                    <span class="cmd">adb shell cat /proc/[pid]/smaps | grep -E "Rss|Pss"</span>
+                </div>
+            </div>
+            <div class="day-section">
+                <h4>✅ 当日产出</h4>
+                <span class="output-tag">✓ 能用 Perfetto 分析卡顿</span>
+                <span class="output-tag">✓ 能检测 Native 内存泄漏</span>
+                <span class="output-tag">✓ 初步设计稳定性指标体系</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 10 -->
+    <div class="day-card w2" id="day10">
+        <div class="day-head" onclick="toggleDay('day10')">
+            <div class="day-num">D10</div>
+            <div class="day-info">
+                <div class="day-title">综合实战 & 稳定性建设规划</div>
+                <div class="day-sub">汇总两周所学，输出稳定性建设方案</div>
+            </div>
+            <div class="day-tags">
+                <span class="day-tag key">综合输出</span>
+                <span class="day-tag practice">方案设计</span>
+            </div>
+            <div class="day-arrow">▼</div>
+        </div>
+        <div class="day-body">
+            <div class="day-section">
+                <h4>📖 上午 · 综合演练</h4>
+                <ul class="task-list">
+                    <li><strong>端到端 Crash 分析演练</strong>：从 bugreport 出发，完整分析一个复杂问题</li>
+                    <li><strong>跨进程死锁分析</strong>：涉及 AMS + WMS + Binder 的联合排查</li>
+                    <li><strong>回顾 C++ 能力在 Android 中的发力点</strong>：Native 层性能优化、Tombstone 分析、系统守护进程开发</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>🔧 下午 · 稳定性建设方案输出</h4>
+                <ul class="task-list">
+                    <li><strong>输出《平台稳定性建设方案 V1》</strong>，包含：</li>
+                    <li>稳定性指标体系：Crash 率 / ANR 率 / 重启率 / 千台天指标</li>
+                    <li>监控体系设计：日志采集 → 聚合 → 告警 → 分析</li>
+                    <li>治理优先级：P0 (Watchdog/system_server 崩溃) → P1 (高频 Crash) → P2 (ANR) → P3 (性能)</li>
+                    <li>工具链建设：自动化 Tombstone 分析、Crash 聚合平台</li>
+                    <li>流程规范：Crash 分级响应、代码审查 Checklist、上线前稳定性准入门槛</li>
+                </ul>
+            </div>
+            <div class="day-section">
+                <h4>✅ 最终产出</h4>
+                <span class="output-tag">✓ 《平台稳定性建设方案 V1》文档</span>
+                <span class="output-tag">✓ 稳定性指标 Dashboard 设计</span>
+                <span class="output-tag">✓ 两周学习总结 & 后续深入计划</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stability Roadmap -->
+<section class="roadmap">
+    <h2>🎯 两周后：稳定性建设方向</h2>
+    <div class="rm-grid">
+        <div class="rm-card c1">
+            <h3>🛡️ 崩溃治理</h3>
+            <ul>
+                <li>Java Crash 分类聚合与自动归因</li>
+                <li>Native Crash Tombstone 自动化分析管线</li>
+                <li>Top Crash 治理闭环（发现→定位→修复→验证）</li>
+                <li>system_server 崩溃专项治理</li>
+            </ul>
+        </div>
+        <div class="rm-card c2">
+            <h3>⏱️ ANR 治理</h3>
+            <ul>
+                <li>ANR 自动化分析工具：traces.txt 解析器</li>
+                <li>Binder 调用链追踪框架</li>
+                <li>主线程耗时操作检测</li>
+                <li>锁竞争与死锁检测</li>
+            </ul>
+        </div>
+        <div class="rm-card c3">
+            <h3>📊 监控体系</h3>
+            <ul>
+                <li>稳定性 KPI 看板：Crash/ANR/重启率</li>
+                <li>实时告警：Watchdog 触发、连续崩溃</li>
+                <li>日志采集管线（xlog-daemon 集成）</li>
+                <li>灰度发布稳定性门禁</li>
+            </ul>
+        </div>
+        <div class="rm-card c4">
+            <h3>⚡ 性能稳定性</h3>
+            <ul>
+                <li>内存泄漏检测自动化</li>
+                <li>CPU 热点函数持续监控</li>
+                <li>系统卡顿/掉帧自动捕获</li>
+                <li>资源竞争与瓶颈分析</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Resources -->
+<section class="resources">
+    <h2>📚 推荐学习资源</h2>
+    <div class="res-grid">
+        <div class="res-item"><span class="icon">📖</span><div><strong>《深入理解 Android 内核设计思想》</strong><br>林学森 · 系统架构全面讲解</div></div>
+        <div class="res-item"><span class="icon">📖</span><div><strong>《Android 系统源代码情景分析》</strong><br>罗升阳 · 经典 AOSP 源码分析</div></div>
+        <div class="res-item"><span class="icon">🌐</span><div><strong>AOSP 官方文档</strong><br>source.android.com · 最权威的参考</div></div>
+        <div class="res-item"><span class="icon">🌐</span><div><strong>Android Performance Patterns</strong><br>Google 官方性能优化系列</div></div>
+        <div class="res-item"><span class="icon">🔧</span><div><strong>Perfetto UI (ui.perfetto.dev)</strong><br>在线 Trace 分析工具</div></div>
+        <div class="res-item"><span class="icon">📺</span><div><strong>Gityuan 博客</strong><br>gityuan.com · 最硬核的 Framework 分析</div></div>
+    </div>
+</section>
+
+<footer>
+    <p>Android 系统开发 · 两周学习计划 · 为稳定性建设而设计</p>
+    <p style="margin-top: 6px;">面向 C++ 背景开发者 · 聚焦系统级开发</p>
+</footer>
+
+<script>
+    function toggleDay(id) {
+        const card = document.getElementById(id);
+        card.classList.toggle('expanded');
+    }
+</script>
+
+</body>
+</html>

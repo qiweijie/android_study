@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.binderdemo">
+
+    <application
+        android:allowBackup="true"
+        android:label="BinderDemo"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:supportsRtl="true">
+
+        <!-- 主 Activity（运行在默认进程中） -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            远程计算器 Service
+            
+            关键配置：android:process=":remote"
+            - ":remote" 表示运行在独立进程中
+            - 进程名为：com.example.binderdemo:remote
+            - 这样 Activity 和 Service 就在不同进程
+            - 它们之间的通信就必须通过 Binder IPC
+        -->
+        <service
+            android:name=".CalculatorService"
+            android:process=":remote"
+            android:exported="false" />
+
+    </application>
+</manifest>
