@@ -52,6 +52,14 @@ public class CalculatorService extends Service {
         }
 
         @Override
+        public int multiply(int a, int b) throws RemoteException {
+            Log.d(TAG, "multiply() 被调用: " + a + " * " + b
+                    + " | 当前线程: " + Thread.currentThread().getName()
+                    + " | PID: " + Process.myPid());
+            return a * b;
+        }
+
+        @Override
         public String getServerProcessInfo() throws RemoteException {
             String info = "Server PID: " + Process.myPid()
                     + "\nServer UID: " + Process.myUid()

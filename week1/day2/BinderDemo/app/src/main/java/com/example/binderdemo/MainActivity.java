@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnUnbind = findViewById(R.id.btn_unbind);
         Button btnAdd = findViewById(R.id.btn_add);
         Button btnSubtract = findViewById(R.id.btn_subtract);
+        Button btnMultiply = findViewById(R.id.btn_multiply);
         Button btnProcessInfo = findViewById(R.id.btn_process_info);
 
         // 显示客户端进程信息
@@ -108,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 减法（跨进程调用）
         btnSubtract.setOnClickListener(v -> performSubtract());
+
+        btnMultiply.setOnClickListener(v -> performMultiply());
 
         // 获取服务端进程信息（验证跨进程）
         btnProcessInfo.setOnClickListener(v -> getServerInfo());
@@ -166,6 +169,35 @@ public class MainActivity extends AppCompatActivity {
                     + "\n耗时: " + (costTime / 1000) + " μs（含 Binder 通信开销）");
 
             Log.d(TAG, "add() 跨进程调用成功: " + result + " | 耗时: " + costTime + " ns");
+        } catch (RemoteException e) {
+            tvResult.setText("远程调用失败: " + e.getMessage());
+            Log.e(TAG, "RemoteException", e);
+        } catch (NumberFormatException e) {
+            tvResult.setText("请输入有效数字");
+        }
+    }
+
+    /**
+     * 执行乘法 - 跨进程调用
+     */
+    private void performMultiply() {
+        if (!mBound) {
+            tvResult.setText("请先绑定服务！");
+            return;
+        }
+        try {
+            int a = Integer.parseInt(etNumA.getText().toString());
+            int b = Integer.parseInt(etNumB.getText().toString());
+
+            long startTime = System.nanoTime();
+            // 这一行就是跨进程调用！
+            int result = mService.multiply(a, b);
+            long costTime = System.nanoTime() - startTime;
+
+            tvResult.setText("结果: " + a + " * " + b + " = " + result
+                    + "\n耗时: " + (costTime / 1000) + " μs（含 Binder 通信开销）");
+
+            Log.d(TAG, "multiply() 跨进程调用成功: " + result + " | 耗时: " + costTime + " ns");
         } catch (RemoteException e) {
             tvResult.setText("远程调用失败: " + e.getMessage());
             Log.e(TAG, "RemoteException", e);

@@ -10,6 +10,9 @@ interface ICalculatorService {
     // 减法运算
     int subtract(int a, int b);
 
+    // 乘法运算
+    int multiply(int a, int b);
+
     // 获取服务端进程信息
     String getServerProcessInfo();
 }

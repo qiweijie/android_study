@@ -54,10 +54,10 @@
                 android:id="@+id/btn_bind"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="绑定服务"
-                android:textSize="14sp"
-                android:layout_marginEnd="8dp" />
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/btn_unbind"
@@ -129,6 +129,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="➖ 减法 (IPC)"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btn_multiply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="* 乘法 (IPC)"
                 android:textSize="13sp" />
         </LinearLayout>
 
