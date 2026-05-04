@@ -3,15 +3,26 @@ plugins {
 }
 
 android {
-    namespace 'com.example.binderdemo'
+    namespace 'com.example.studydemo'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.example.binderdemo"
+        applicationId "com.example.studydemo"
         minSdk 24
         targetSdk 35
         versionCode 1
         versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags.add("-std=c++17")
+                arguments.add("-DANDROID_STL=c++_shared")
+            }
+        }
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
     }
 
     buildTypes {
@@ -25,9 +36,15 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    // 启用 AIDL 支持
     buildFeatures {
         aidl true
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
     }
 }
 
