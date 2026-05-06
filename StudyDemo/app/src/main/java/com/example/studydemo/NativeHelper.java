@@ -14,4 +14,6 @@ public class NativeHelper {
     public static native byte[] getByteArray(int size);
 
     public static native String processIntArray(int[] array);
+
+public static native void triggerNativeCrash(int crashType);
 }

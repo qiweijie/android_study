@@ -50,4 +50,9 @@ Java_com_example_studydemo_NativeHelper_processIntArray(JNIEnv *env, jclass claz
     return env->NewStringUTF(result.c_str());
 }
 
+JNIEXPORT void JNICALL
+Java_com_example_studydemo_NativeHelper_triggerNativeCrash(JNIEnv *env, jclass clazz, jint crashType) {
+    triggerNativeCrash(crashType);
+}
+
 }

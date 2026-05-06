@@ -193,6 +193,16 @@
             android:layout_height="wrap_content"
             android:text="🔢 处理 Int 数组"
             android:textSize="12sp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_native_crash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💥 触发 Native Crash（空指针解引用）"
+            android:textSize="12sp"
+            android:backgroundTint="#DC2626"
+            android:textColor="#FFFFFF"
             android:layout_marginBottom="16dp" />
 
         <TextView

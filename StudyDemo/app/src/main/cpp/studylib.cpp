@@ -90,4 +90,49 @@ std::string processIntArray(const int32_t* array, int len) {
     return result;
 }
 
+void triggerNativeCrash(int crashType) {
+    LOGD("triggerNativeCrash() called with type: %d", crashType);
+    
+    switch (crashType) {
+        case 1: {
+            // 空指针解引用 - NULL pointer dereference
+            LOGD("Crash type 1: NULL pointer dereference");
+            int* nullPtr = nullptr;
+            *nullPtr = 42;  // 这会导致 SIGSEGV
+            break;
+        }
+        case 2: {
+            // 数组越界访问 - Array out of bounds
+            LOGD("Crash type 2: Array out of bounds access");
+            int arr[5] = {1, 2, 3, 4, 5};
+            int value = arr[100];  // 越界访问
+            LOGD("value: %d", value);  // 可能不会立即崩溃，但访问非法内存
+            break;
+        }
+        case 3: {
+            // 整数除零 - Division by zero
+            LOGD("Crash type 3: Division by zero");
+            int a = 10;
+            int b = 0;
+            int result = a / b;  // 这会导致 SIGFPE
+            LOGD("result: %d", result);
+            break;
+        }
+        case 4: {
+            // Use-after-free - 访问已释放的内存
+            LOGD("Crash type 4: Use-after-free");
+            int* ptr = new int(100);
+            delete ptr;
+            *ptr = 200;  // 访问已释放的内存，会导致 SIGSEGV
+            break;
+        }
+        default: {
+            // 默认: 直接崩溃
+            LOGD("Crash type default: Forcing crash");
+            *(volatile int*)0 = 0;  // 直接访问地址 0
+            break;
+        }
+    }
+}
+
 }

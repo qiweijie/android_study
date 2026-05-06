@@ -25,6 +25,8 @@ struct IntArrayResult {
 
 IntArrayResult calculateIntArrayStats(const int32_t* array, int len);
 
+void triggerNativeCrash(int crashType);
+
 }
 
 #endif

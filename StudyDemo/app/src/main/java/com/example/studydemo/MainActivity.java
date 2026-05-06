@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnJNISystemInfo = findViewById(R.id.btn_jni_system_info);
         Button btnJNIHello = findViewById(R.id.btn_jni_hello);
         Button btnJNIArray = findViewById(R.id.btn_jni_array);
+        Button btnNativeCrash = findViewById(R.id.btn_native_crash);
 
         tvProcessInfo.setText("Client PID: " + Process.myPid()
                 + " | UID: " + Process.myUid()
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         btnJNISystemInfo.setOnClickListener(v -> getNativeSystemInfo());
         btnJNIHello.setOnClickListener(v -> sayHelloFromNative());
         btnJNIArray.setOnClickListener(v -> processNativeArray());
+        btnNativeCrash.setOnClickListener(v -> triggerNativeCrash());
 
         Log.d(TAG, "Activity 创建 | PID: " + Process.myPid());
     }
@@ -238,6 +240,13 @@ public class MainActivity extends AppCompatActivity {
             tvResult.setText("JNI 调用失败: " + e.getMessage());
             Log.e(TAG, "processIntArray() failed", e);
         }
+    }
+
+    private void triggerNativeCrash() {
+        Log.w(TAG, "⚠️ 即将触发 Native Crash - 空指针解引用");
+        tvResult.setText("⚠️ 正在触发 Native Crash...\n类型: 空指针解引用\n\n应用将崩溃并退出");
+        // crashType=1 表示空指针解引用
+        NativeHelper.triggerNativeCrash(1);
     }
 
     @Override
